@@ -24,87 +24,31 @@
 #  - add result of each conversion to `result` varible
 #  - return result variable
 
-require 'pry'
-
 class RomanNumeral
-  DECIMAL_TO_ROMAN = {
-    1 => 'I',
-    2 => 'II',
-    3 => 'III',
-    4 => 'IV',
-    5 => 'V',
-    6 => 'VI',
-    7 => 'VII',
-    8 => 'VIII',
-    9 => 'IX',
-    10 => 'X',
-    20 => 'XX',
-    30 => 'XXX',
-    40 => 'XL',
-    50 => 'L',
-    60 => 'LX',
-    70 => 'LXX',
-    80 => 'LXX',
-    90 => 'XC',
-    100 => 'C',
-    200 => 'CC',
-    300 => 'CCC',
-    400 => 'CD',
-    500 => 'D',
-    600 => 'DC',
-    700 => 'DCC',
-    800 => 'DCCC',
-    900 => 'CM',
-    1000 => 'M'
-  }
+  DECIMAL_TO_ROMAN = [
+    {1000 => 'M'}, {900 => 'CM'}, {500 => 'D'}, {400 => 'CD'}, {100 => 'C'},
+    {90 => 'XC'}, {50 => 'L'}, {40 => 'XL'}, {10 => 'X'}, {9 => 'IX'},
+    {5 => 'V'}, {4 => 'IV'}, {1 => 'I'}
+  ]
 
   def initialize(number)
     @number = number
   end
 
-  def get_thousands_numeral(digit)
-    return DECIMAL_TO_ROMAN[1000] * digit if digit
-    ''
-  end
-
-  def get_hundreds_numeral(digit)
-    if digit && digit != 0
-      return DECIMAL_TO_ROMAN[digit * 100]
-    else
-      ''
-    end
-  end
-
-  def get_tens_numeral(digit)
-    if digit && digit != 0
-      return DECIMAL_TO_ROMAN[digit * 10]
-    else
-      ''
-    end
-  end
-
-  def get_last_numeral(digit)
-    return DECIMAL_TO_ROMAN[digit] unless digit == 0
-    ''
-  end
-
   def to_roman
-    digits = @number.digits
-    last = digits[0]
-    tens = digits[1]
-    hundreds = digits[2]
-    thousands = digits[3]
     result = ''
+    convert = @number
 
-    # binding.pry
+    DECIMAL_TO_ROMAN.each do |conversion|
+      conversion.each_pair do |decimal, numeral|
+        multiplier, remainder = convert.divmod(decimal)
+        if multiplier > 0
+          result += (numeral * multiplier)
+        end
+        convert = remainder
+      end
+    end
 
-    result += get_thousands_numeral(thousands)
-    result += get_hundreds_numeral(hundreds)
-    result += get_tens_numeral(tens)
-    result += get_last_numeral(last)
     result
   end
 end
-
-number = RomanNumeral.new(402)
-p number.to_roman

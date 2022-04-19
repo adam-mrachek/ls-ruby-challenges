@@ -47,7 +47,7 @@ class BeerSong
   end
 
   def self.lyrics
-    BeerSong.new(99, 0).print_lyrics
+    verses(99, 0)
   end
 
   def print_lyrics
